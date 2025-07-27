@@ -97,6 +97,5 @@ def file_itr():
         return jsonify({"error": "An unexpected error occurred: " + str(e)}), 500
 
 if __name__ == '__main__':
-    # Run the server on localhost:5000
-    # You can change the port if needed
-    app.run(debug=True, port=5000)
+    # Run the server on all interfaces for containerization
+    app.run(debug=True, host='0.0.0.0', port=5000)

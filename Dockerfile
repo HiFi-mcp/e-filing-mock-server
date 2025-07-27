@@ -10,13 +10,15 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     FLASK_APP=server.py \
     FLASK_ENV=production
 
-# Install system dependencies
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        gcc \
+# Update package lists and install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    gnupg \
+    gcc \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements file (we'll create this)
+# Copy requirements file
 COPY requirements.txt .
 
 # Install Python dependencies
