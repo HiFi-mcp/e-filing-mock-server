@@ -3,21 +3,15 @@ version: '3.8'
 services:
   efiling-mock-server:
     build: .
+    container_name: efiling-mock-server
     ports:
       - "5000:5000"
+    networks:
+      - share-proxy
     environment:
       - FLASK_ENV=production
-      - PYTHONUNBUFFERED=1
-    healthcheck:
-      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/health')"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
     restart: unless-stopped
-    networks:
-      - shared-proxy
 
 networks:
   shared-proxy:
-    external: true 
+    external: true
