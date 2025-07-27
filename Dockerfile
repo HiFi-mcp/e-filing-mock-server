@@ -10,11 +10,10 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     FLASK_APP=server.py \
     FLASK_ENV=production
 
-# Update package lists and install system dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates \
-    gnupg \
-    gcc \
+# Install minimal system dependencies (avoiding GPG issues)
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        gcc \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
