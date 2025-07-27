@@ -1,6 +1,7 @@
 # This code is for demonstration purposes on your local machine.
 # You would need to install Flask: pip install Flask
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from datetime import datetime
 import random
 import json
@@ -66,11 +67,29 @@ def fill_and_submit_itr_form_mock(itr_form_type: str, user_data: dict, pan: str)
 
 app = Flask(__name__)
 
+# Enable CORS for all routes with all origins allowed
+CORS(app, origins="*", methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"], 
+     allow_headers=["Content-Type", "Authorization", "X-Requested-With"])
+
+# Add headers to all responses to ensure no CORS issues
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,X-Requested-With')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    response.headers.add('Access-Control-Allow-Credentials', 'true')
+    return response
+
 @app.route('/health', methods=['GET'])
 def health_check():
     return jsonify({"status": "healthy", "service": "e-filing-mock-server"}), 200
 
+@app.route('/test', methods=['GET', 'POST', 'OPTIONS'])
+def test_route():
+    return jsonify({"message": "Test route working", "method": request.method}), 200
+
 @app.route('/file_itr', methods=['POST'])
+@app.route('/file-itr', methods=['POST'])
 def file_itr():
     data = request.get_json()
 
